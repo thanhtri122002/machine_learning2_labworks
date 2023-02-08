@@ -52,15 +52,15 @@ def calculate_cov():
     return numerator/len(numerator_temp)
 
 def calculate_correalation():
-    numerator_vector = []
+    numerator = []
     for x in std_x:
-        numerator = x * std_y
-        numerator_vector.append(numerator)
+        numerator_component = x * std_y
+        numerator.append(numerator_component)
     
-    numerator_vector = np.asarray(numerator_vector)
+    numerator = np.asarray(numerator)
     print('----')
-    print(numerator_vector.shape)
-    correalation = np.divide(covarience_value,numerator_vector)
+    print(numerator.shape)
+    correalation = np.divide(covarience_value,numerator)
     return correalation
     
     
@@ -72,10 +72,7 @@ varience_value = caculate_varience(X)
 covarience_value = calculate_cov()
 print(varience_value.shape)
 
-
 #print(covarience_value.shape) #11,
-
-
 std_x = np.std(X,axis = 0)
 #print(std_x)
 print(std_x.shape) 
@@ -87,8 +84,6 @@ numerator = calculate_correalation()
 print(type(numerator))
 print(numerator.shape)
 print(numerator)
-
-
 """print(mean_value)
 print(varience_value)"""
 
