@@ -1,60 +1,80 @@
-import csv
-import numpy as np
 import pandas as pd
+import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
-path_2  = r"C:\Users\ASUS\Desktop\machinelearning2-labwork\iris.txt"
-
-data_iris = pd.read_csv(path_2,sep =',', header = None )
-
-data_iris.columns = ['sepal length', 'sepal width',
-                     'petal length', 'petal width', 'species']
-print(data_iris.head())
-print(type(data_iris))
+path = r"C:\Users\ASUS\Desktop\machinelearning2-labwork\iris.csv"
+data = pd.read_csv("iris.csv")
+print(data.head())
+species_mapping = {'Iris-setosa': 0, 'Iris-versicolor': 1, "Iris-virginica": 2}
 
 
-column_names = list(data_iris.columns.values.tolist())
-X = [column_name for column_name in column_names if column_name !='species']
-
-Y = ['species']
-
-X_data = data_iris.loc[:,X]
+data['species'] = data['species'].map(species_mapping)
 
 
-encoded = pd.get_dummies(data= data_iris, columns= ["species"] , dummy_na= False)
+column_names = list(data.columns.values.tolist())
 
-print(encoded)
-Y_data = encoded.loc[:,["species_Iris-setosa","species_Iris-versicolor","species_Iris-virginica"]]
+X = [column_name for column_name in column_names if column_name != "species"]
+Y = ["species"]
 
-print(X_data)
-print(Y_data)
+X_data = data.loc[:, X].values
 
-X_mean = X_data.mean()
-Y_mean = Y_data.mean()
+Y_data = data.loc[:, Y].values
 
-print(X_mean)
-print(Y_mean)
+#calculate the mean
 
-X_varience = data_iris.var()
-print(X_varience)
+mean = data.mean()
 
-covarience = data_iris.cov()
+print("The mean of the data is :\n", mean)
+
+varience = data.var()
+
+
+print("The varience of the data is:\n", varience)
+
+covarience = data.cov()
+
+print("The covarience")
+
 print(covarience)
 
-correalation = data_iris.corr()
-correalation_features = X_data.corr()
+corr = data.corr()
 
 print("correalation")
 
-print(correalation)
+print(corr)
 
-print("correalation between features")
+corr_max = corr.abs().unstack().sort_values(ascending=False)
 
-print(correalation_features)
+# Exclude the diagonal values
+corr_max = corr_max[corr_max != 1]
 
+# Get the most highly correlated couple of features
+most_highly_correlated = corr_max.index[0]
 
-    
+# Print the result
+print("The most highly correlated couple of features are:", most_highly_correlated)
 
+# Standardize the data
+X_data = StandardScaler().fit_transform(X_data)
 
+pca = PCA(n_components=2)
 
+# Fit and transform the data
+X_pca = pca.fit_transform(X_data)
+
+# Calculate the explained variance ratio
+explained_variance = pca.explained_variance_ratio_
+
+print("PCA:", pca)
+print("PCA components:\n", X_pca)
+print("The total variation in the data is explained by the first two principal components is:",
+      explained_variance[0] + explained_variance[1])
+
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=Y_data.ravel(), cmap='viridis')
+plt.xlabel('First Principal Component')
+plt.ylabel('Second Principal Component')
+plt.colorbar().set_ticks([0, 1, 2])
+plt.title('Iris Data Projected onto First Two Principal Components')
+plt.show()
