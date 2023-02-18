@@ -29,12 +29,20 @@ X_data_1 = dataset_1.loc[:,X_1].values
 mean_1 = dataset_1.mean()
 varience_1 = dataset_1.var()
 covarience_1 = dataset_1.cov()
-covarience_1 = dataset_1.corr()
-corr_max_1 = covarience_1.abs().unstack().sort_values(ascending=False)
+corealation_1 = dataset_1.corr()
+corr_max_1 = corealation_1.abs().unstack().sort_values(ascending=False)
 corr_max_1 = corr_max_1[corr_max_1 != 1]
-most_highly_corealated = corr_max_1.index[0]
-
-
+most_highly_corealated_1 = corr_max_1.index[0]
+print('the mean of the dataset 1')
+print(mean_1)
+print('the varience of the dataset 1: ')
+print(varience_1)
+print('the covarience of the dataset 1: ')
+print(covarience_1)
+print('the corealation of dataset 1: ')
+print(corealation_1)
+print('the most highly corealated in dataset 1:')
+print(most_highly_corealated_1)
 single_linkage_1 = linkage(X_data_1, method = "complete")
 dendrogram_single_1 = dendrogram(single_linkage_1)
 plt.show()
@@ -53,10 +61,20 @@ X_data_2 = dataset_2.loc[:,X_2].values
 mean_2 = dataset_2.mean()
 varience_2 = dataset_2.var()
 covarience_2 = dataset_2.cov()
-covarience_2 = dataset_2.corr()
-corr_max_2 = covarience_2.abs().unstack().sort_values(ascending=False)
+corealation_2 = dataset_2.corr()
+corr_max_2 = corealation_2.abs().unstack().sort_values(ascending=False)
 corr_max_2 = corr_max_2[corr_max_2 != 1]
-most_highly_corealated = corr_max_2.index[0]
+most_highly_corealated_2 = corr_max_2.index[0]
+print('mean of the dataset 2: ')
+print(mean_2)
+print("varience of the dataset 2: ")
+print(varience_2)
+print('covarience of the dataset 2: ')
+print(covarience_2)
+print('corealation of the dataset 2: ')
+print(corealation_2)
+print('the most highly corealated in dataset 2: ')
+print(most_highly_corealated_2)
 single_linkage_2 = linkage(X_data_2, method = "complete")
 dendogram_singe_2 = dendrogram(single_linkage_2)
 plt.show()
