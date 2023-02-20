@@ -62,7 +62,7 @@ def PCA_visualize(dataset,target_values,target_name):
     plt.xlabel('First Principal Component')
     plt.ylabel('Second Principal Component')
     plt.colorbar()
-    plt.title('Iris Data Projected onto First Two Principal Components')
+    plt.title('Data Projected onto First Two Principal Components')
     plt.show()
     return X_pca
     
