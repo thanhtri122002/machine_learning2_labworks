@@ -5,6 +5,9 @@ from sklearn.preprocessing import StandardScaler , normalize
 from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.model_selection import train_test_split ,LeaveOneOut, cross_val_score, KFold
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import Perceptron
+import matplotlib.pyplot as plt
+
 
 def take_dataset():
     path_1 = r'./labwork2/Raisin_Dataset.xlsx'
@@ -27,7 +30,7 @@ def take_dataset():
             X_data_1 = dataset_1.loc[:,column_names_1].values
             Y_data_1 = dataset_1.loc[:,["Class"]]
             return X_data_1, Y_data_1
-            
+
         elif choice == 2:
             dataset_2 = pd.read_csv(path_2,header = None)
             dataset_2.columns = ["Sex","Length","Diameter","Height","Whole weight","Shucked weight","Viscera weight","Shell weight","Rings"]
@@ -40,7 +43,8 @@ def take_dataset():
             X_data_2 = dataset_2.loc[:,column_names_2].values
             Y_data_2 = dataset_2.loc[:,["Rings"]]
             return X_data_2, Y_data_2
-        if choice == 3:
+
+        elif choice == 3:
             dataset_3 = pd.read_csv(path_3)
             species_mapping = {'Iris-setosa': 0, 'Iris-versicolor': 1, "Iris-virginica": 2}
             dataset_3['species']  = dataset_3['species'].map(species_mapping)
@@ -53,6 +57,7 @@ def take_dataset():
             X_data_3 = dataset_3.loc[:, X].values
             Y_data_3 = dataset_3.loc[:, Y].values
             return X_data_3, Y_data_3
+        
             
             
 def normalize_data(X_data):
@@ -68,7 +73,6 @@ def app_SVD(X_data, components):
     X_trans = svd.fit_transform(X_data)
     return X_trans
 
-
 def app_loo(X_data,Y_data, no_neighbors):
     classifier = KNeighborsClassifier(n_neighbors= no_neighbors)
     loo = LeaveOneOut()
@@ -76,11 +80,11 @@ def app_loo(X_data,Y_data, no_neighbors):
     return scores
 
 def cross_val(X_data,Y_data, no_neighbors):
+    
     classifier = KNeighborsClassifier(n_neighbors=no_neighbors)
     k_folds = KFold(n_splits = 5)
     scores = cross_val_score(classifier, X_data, Y_data, cv=k_folds)
     return scores
-
 
 def train(X_data,Y_data, no_neighbors):
     x_train , x_test ,y_train , y_test = train_test_split(X_data, Y_data, test_size= 0.25,random_state= 0)
@@ -88,8 +92,6 @@ def train(X_data,Y_data, no_neighbors):
     x_train = st_x.fit_transform(x_train)
     x_test = st_x.fit_transform(x_test)
     print(x_train)
-
-
     classifier = KNeighborsClassifier(n_neighbors= no_neighbors)
     classifier.fit(x_train, y_train)
     y_pred = classifier.predict(x_test) #type : numpy array
@@ -98,13 +100,20 @@ def train(X_data,Y_data, no_neighbors):
     
     print(cm)
 
+def perceptron_classifier(X_data,Y_data):
+    x_train , x_test ,y_train , y_test = train_test_split(X_data, Y_data, test_size= 0.25,random_state= 0)
+    p = Perceptron()
+    p.fit(x_train,y_train)
+    p.predict(x_test, y_test)
+    pass
+
 if __name__ == "__main__":
     X_data, Y_data = take_dataset()
     while True:
         print('1. work with raw data')
         print('2. work with normalize data')
         print('3. work with pca')
-        print('4, work with svd')
+        print('4. work with svd')
         choice = int(input('select choice: '))
         if choice == 1:
             normalize_data(X_data)
@@ -114,12 +123,12 @@ if __name__ == "__main__":
             neighbors = int(input('select the number of neighbors: '))
             train(X_data,Y_data,neighbors)
             print('----')
-        elif choice == 4:
+        elif choice == 3:
             neighbors = int(input('select the number of neighbors: '))
             components = int(input('select no components: '))
             x_pca = app_PCA(X_data,components)
             train(X_data,Y_data,neighbors)
-        elif choice == 5:
+        elif choice == 4:
             neighbors = int(input('select the number of neighbors: '))
             components = int(input('select no components: '))
             x_pca = app_SVD(X_data,components)
