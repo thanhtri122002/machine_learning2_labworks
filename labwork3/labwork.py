@@ -103,9 +103,22 @@ def train(X_data,Y_data, no_neighbors):
 def perceptron_classifier(X_data,Y_data):
     x_train , x_test ,y_train , y_test = train_test_split(X_data, Y_data, test_size= 0.25,random_state= 0)
     p = Perceptron()
-    p.fit(x_train,y_train)
-    p.predict(x_test, y_test)
-    pass
+    return p.fit(x_train,y_train) , x_test , y_test
+
+def plot_decision_boundary(model, X, Y, cmap='Paired_r'):
+    h = 0.02
+    x_min, x_max = X[:,0].min() - 0.5, X[:,0].max() + 0.5
+    y_min, y_max = X[:,1].min() - 0.5, X[:,1].max() + 0.5
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                         np.arange(y_min, y_max, h))
+    Z = model.predict(np.array[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    plt.figure(figsize=(5,5))
+    plt.contourf(xx, yy, Z, cmap=cmap, alpha=0.25)
+    plt.contour(xx, yy, Z, colors='k', linewidths=0.7)
+    plt.scatter(X[:,0], X[:,1], c=Y, cmap=cmap, edgecolors='k')
+    plt.show()
+
 
 if __name__ == "__main__":
     X_data, Y_data = take_dataset()
@@ -114,6 +127,7 @@ if __name__ == "__main__":
         print('2. work with normalize data')
         print('3. work with pca')
         print('4. work with svd')
+        print('5. perceptron visualize')
         choice = int(input('select choice: '))
         if choice == 1:
             normalize_data(X_data)
@@ -131,8 +145,16 @@ if __name__ == "__main__":
         elif choice == 4:
             neighbors = int(input('select the number of neighbors: '))
             components = int(input('select no components: '))
-            x_pca = app_SVD(X_data,components)
+            x_svd = app_SVD(X_data,components)
+            print(x_svd.shape)
             train(X_data, Y_data, neighbors)
+        elif choice ==5:
+            neighbors = int(input('select the number of neighbors: '))
+            components = int(input('select no components: '))
+            x_svd = app_SVD(X_data, components)
+            model,x_test,y_test = perceptron_classifier(x_svd,Y_data)
+            visualize = plot_decision_boundary(model,x_svd,y_test)
+
         else:
             break
         
