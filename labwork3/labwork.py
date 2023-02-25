@@ -102,7 +102,7 @@ def cross_val(X_data, Y_data, no_neighbors):
     classifier = KNeighborsClassifier(n_neighbors=no_neighbors)
     k_folds = KFold(n_splits=5)
     scores = cross_val_score(classifier, X_data, Y_data, cv=k_folds)
-    return scores
+    print(scores)
 
 def train(X_data, Y_data, no_neighbors):
     x_train, x_test, y_train, y_test = train_test_split(X_data, Y_data, test_size=0.2, random_state=42)
@@ -115,7 +115,7 @@ def train(X_data, Y_data, no_neighbors):
     accuracy = accuracy_score(y_test, y_pred )
     recall = recall_score(y_test, y_pred, average = None)
     error = 1 - accuracy
-    print(f'confusion matrix : {cm}')
+    print(f'confusion matrix : \n  {cm}')
     print(f'f1 score : {f1score}')
     print(f'accuracy : {accuracy}')
     print(f'recall :{recall}')
@@ -207,5 +207,8 @@ if __name__ == "__main__":
             neighbors=int(input('select the number of neighbors: '))
             scores = app_loo(X_data, Y_data, neighbors)
             print(scores)
+        elif choice == 7:
+            neighbors=int(input('select the number of neighbors: '))
+            cross_val(X_data, Y_data,neighbors)
         else:
             break
