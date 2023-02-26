@@ -4,9 +4,10 @@ from sklearn.model_selection import train_test_split, KFold , cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import Pipeline
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 data_path_1 = r'./labwork2/abalone.csv'
-data_path_2 = r'./labwork2/Rainsin_Dataset.xlsx'
+data_path_2 = r'./labwork2/Raisin_Dataset.xlsx'
 
 def take_data_1(path):
     dataset = pd.read_csv(path,header = None)
@@ -32,26 +33,23 @@ def take_data_2(path):
 
     X_data = dataset.loc[:,column_names_1].values
     Y_data = dataset.loc[:,["Class"]].values
-    X_data_st = standarlization(X_data, None)
-    return X_data_st, Y_data
+    
+    
+    return X_data, Y_data
 
 def random_forest(X_data, Y_data):
     kfold = KFold(n_splits= 101)
     for train_index, test_index in kfold.split(X_data):
+       
        X_train , X_test = X_data[train_index ] , X_data[test_index]
-       y_train , y_train = Y_data[train_index] , Y_data[test_index]
-       model = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
-       model.fit(X_train, y_train)
-       y_pred = model.predict(X_test)
-
-       accuracy = accuracy_score(y_test,y_pred)
-       error = 1 - accuracy
-       print(f'error of {train_index}: {error}')
+       y_train , y_test = Y_data[train_index] , Y_data[test_index]
+       pipeline = Pipeline([('scaler', StandardScaler()),('RandomForest', RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1))])
+      
+       pipeline.fit(X_train, y_train)
+       
        """ print("TRAIN:", train_index, "TEST:", test_index)
 ...     X_train, X_test = X[train_index], X[test_index]
 ...     y_train, y_test = y[train_index], y[test_index]"""
-
-    
 
 
 def standarlization(x_train , x_test):
@@ -70,6 +68,9 @@ def decision_tree(x_train, x_test , y_train , y_test):
 
 x_train , x_test , y_train , y_test = take_data_1(data_path_1)
 decision_tree(x_train , x_test , y_train , y_test)
+
+X_data_2 , Y_data_2 = take_data_2(data_path_2)
+random_forest(X_data_2,Y_data_2)
 
 
 
