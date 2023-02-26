@@ -39,17 +39,22 @@ def take_data_2(path):
 
 def random_forest(X_data, Y_data):
     kfold = KFold(n_splits= 101)
+    errors = []
     for train_index, test_index in kfold.split(X_data):
        
-       X_train , X_test = X_data[train_index ] , X_data[test_index]
-       y_train , y_test = Y_data[train_index] , Y_data[test_index]
-       pipeline = Pipeline([('scaler', StandardScaler()),('RandomForest', RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1))])
-      
-       pipeline.fit(X_train, y_train)
-       
-       """ print("TRAIN:", train_index, "TEST:", test_index)
-...     X_train, X_test = X[train_index], X[test_index]
-...     y_train, y_test = y[train_index], y[test_index]"""
+        X_train , X_test = X_data[train_index ] , X_data[test_index]
+        y_train , y_test = Y_data[train_index] , Y_data[test_index]
+        pipeline = Pipeline(steps= [('scaler', StandardScaler()),('RandomForest', RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1))], verbose= True)
+        
+        pipeline.fit(X_train, y_train.ravel())
+        y_predict = pipeline.predict(X_test)
+        error = 1 - pipeline.score(X_test,y_test.ravel())
+        errors.append(error)
+
+        """ print("TRAIN:", train_index, "TEST:", test_index)
+    ...     X_train, X_test = X[train_index], X[test_index]
+    ...     y_train, y_test = y[train_index], y[test_index]"""
+    print(errors)
 
 
 def standarlization(x_train , x_test):
