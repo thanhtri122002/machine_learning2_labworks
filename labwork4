@@ -30,11 +30,8 @@ def take_data_2(path):
     Class_mapping ={'Kecimen':0, 'Besni':1}
     dataset["Class"] = dataset["Class"].map(Class_mapping)
     column_names_1 = [column_name for column_name in columns if column_name != "Class"]
-
     X_data = dataset.loc[:,column_names_1].values
     Y_data = dataset.loc[:,["Class"]].values
-    
-    
     return X_data, Y_data
 
 def random_forest(X_data, Y_data):
@@ -72,8 +69,10 @@ def decision_tree(x_train, x_test , y_train , y_test):
     print(f'the error in this model is : {error}')
 
 x_train , x_test , y_train , y_test = take_data_1(data_path_1)
+print("part 1")
 decision_tree(x_train , x_test , y_train , y_test)
 
+print("part 2")
 X_data_2 , Y_data_2 = take_data_2(data_path_2)
 random_forest(X_data_2,Y_data_2)
 
